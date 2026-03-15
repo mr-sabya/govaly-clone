@@ -46,9 +46,18 @@
     mix-blend-mode: multiply;
 
     /* Increase opacity slightly to ensure you can see it */
-    opacity: 0.3;
+    opacity: 0.2;
 
     /* CRITICAL: Allows clicks to pass through to the search bar */
     pointer-events: none;
     z-index: 0;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }

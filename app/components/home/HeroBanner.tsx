@@ -1,49 +1,73 @@
 "use client";
+import React from "react";
 import { Search } from "lucide-react";
+import { useLoginModal } from "../layout/LoginModal";
 
-export default function HeroBanner({ onLoginClick }: { onLoginClick: () => void }) {
+export default function HeroBanner() {
+    const { openLogin } = useLoginModal();
+
     return (
-        <section className="relative w-full h-[320px] md:h-[420px] bg-govaly-pink-dark flex flex-col items-center justify-center text-white overflow-hidden">
+        <section className="relative w-full h-[350px] md:h-[480px] bg-govaly-pink-dark flex flex-col items-center justify-center text-white overflow-hidden">
 
-            {/* Cityscape Pattern Overlay */}
-            <div className="absolute inset-0 hero-bg-overlay opacity-10 pointer-events-none" />
+            {/* --- HERO BG OVERLAY (Integrated from your CSS) --- */}
+            <div
+                className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat mix-blend-multiply opacity-30 pointer-events-none z-0"
+                style={{
+                    backgroundImage: `url("/images/2202_w039_n003_110b_p1_110.jpg")`,
+                }}
+            />
 
-            {/* Top Right Auth Links - Reduced size */}
-            <div className="absolute top-4 right-4 md:right-8 flex items-center gap-1.5 text-[13px] font-medium z-10">
-                <button onClick={onLoginClick} className="hover:underline cursor-pointer">Log In</button>
-                <span className="opacity-80 text-xs">or</span>
+            {/* --- TOP RIGHT AUTH LINKS --- */}
+            <div className="absolute top-6 right-6 md:right-12 flex items-center gap-2 text-[13px] md:text-[15px] font-semibold z-20">
                 <button
-                    onClick={onLoginClick}
-                    className="bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition"
+                    onClick={openLogin}
+                    className="hover:text-pink-200 transition-colors cursor-pointer"
+                >
+                    Log In
+                </button>
+                <span className="opacity-50 font-light">|</span>
+                <button
+                    onClick={openLogin}
+                    className="bg-white text-[#E2136E] px-4 py-1.5 rounded-full hover:bg-pink-50 transition-all shadow-md font-bold"
                 >
                     Sign Up
                 </button>
             </div>
 
-            {/* Main Text Content - Reduced spacing and size */}
-            <div className="text-center z-10 px-4 -mt-8 md:-mt-12">
-                <h2 className="text-lg md:text-5xl font-normal tracking-tight leading-none mb-4">
+            {/* --- MAIN TEXT CONTENT --- */}
+            <div className="text-center z-10 px-4 -mt-10 md:-mt-16 select-none">
+                <h2 className="text-lg md:text-3xl font-medium tracking-wide mb-2 opacity-90">
                     Bangladesh’s Favorite Online
                 </h2>
-                <h1 className="text-5xl md:text-8xl font-black uppercase leading-[0.9] tracking-tighter">
-                    Fashion Mall
+
+                <h1 className="text-4xl md:text-[80px] font-black uppercase leading-[0.85] tracking-tighter drop-shadow-2xl">
+                    Fashion <br className="md:hidden" /> Mall
                 </h1>
             </div>
 
-            {/* Search Bar - Thinner and more compact */}
-            <div className="absolute bottom-15 w-full max-w-[90%] md:max-w-[600px] z-10">
-                <div className="relative flex items-center bg-white rounded-full p-1 shadow-lg">
-                    <div className="pl-4 pr-1 text-gray-400">
-                        <Search className="w-4 h-4" />
+            {/* --- SEARCH BAR --- */}
+            <div className="absolute bottom-12 w-full max-w-[92%] md:max-w-[700px] z-10">
+                <div className="relative flex items-center bg-white rounded-full p-1.5 shadow-2xl transform transition-transform hover:scale-[1.01]">
+                    <div className="pl-4 pr-2 text-gray-400">
+                        <Search className="w-5 h-5" />
                     </div>
                     <input
                         type="text"
-                        placeholder="Search products..."
-                        className="w-full bg-transparent border-none outline-none text-gray-800 py-2 md:py-2.5 text-sm md:text-base placeholder:text-gray-400"
+                        placeholder="Search for clothes, shoes, accessories..."
+                        className="w-full bg-transparent border-none outline-none text-gray-800 py-2.5 md:py-3.5 text-sm md:text-lg placeholder:text-gray-400 font-medium"
                     />
-                    <button className="bg-govaly-pink text-white px-6 md:px-8 py-2 md:py-2.5 rounded-full text-sm font-bold hover:bg-opacity-90 transition">
+                    <button className="bg-[#E2136E] text-white px-8 md:px-12 py-2.5 md:py-3.5 rounded-full text-sm md:text-base font-bold hover:bg-[#c4115f] transition-all active:scale-95 shadow-lg shadow-pink-100">
                         Search
                     </button>
+                </div>
+
+                {/* Quick Tags */}
+                <div className="flex justify-center gap-4 mt-4 overflow-x-auto no-scrollbar whitespace-nowrap">
+                    {["T-Shirts", "Sarees", "Watches", "Sneakers"].map((tag) => (
+                        <span key={tag} className="text-[11px] md:text-xs bg-white/10 hover:bg-white/20 px-3 py-1 rounded-full cursor-pointer transition-colors backdrop-blur-sm border border-white/10">
+                            #{tag}
+                        </span>
+                    ))}
                 </div>
             </div>
         </section>

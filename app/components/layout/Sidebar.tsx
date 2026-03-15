@@ -2,10 +2,9 @@
 import { useState } from "react";
 import { X, ChevronDown, Headset, Mail, Phone, MessageCircle, ExternalLink } from "lucide-react";
 
-// 1. Define strict interfaces to fix the TypeScript error
 interface SubCategory {
     name: string;
-    items?: string[]; // The '?' means this property is optional
+    items?: string[];
 }
 
 interface Category {
@@ -13,20 +12,13 @@ interface Category {
     subcategories?: SubCategory[];
 }
 
-// 2. Apply the 'Category[]' type to your data
 const MENU_DATA: Category[] = [
     {
         name: "For You",
         subcategories: [
-            { name: "Baby Bath" },
-            { name: "Baby Accessories" },
-            { name: "Baby Clothing Set" },
-            { name: "Baby Cream" },
-            { name: "Baby Diapers" },
-            { name: "Baby Lotion" },
-            { name: "Baby Oil" },
-            { name: "Baby Powder" },
-            { name: "Baby Shoes" },
+            { name: "Baby Bath" }, { name: "Baby Accessories" }, { name: "Baby Clothing Set" },
+            { name: "Baby Cream" }, { name: "Baby Diapers" }, { name: "Baby Lotion" },
+            { name: "Baby Oil" }, { name: "Baby Powder" }, { name: "Baby Shoes" },
         ],
     },
     {
@@ -34,9 +26,7 @@ const MENU_DATA: Category[] = [
         subcategories: [
             {
                 name: "Men Fashion Accessories",
-                items: [
-                    "Men Bags", "Men Belts", "Men Caps & Hats", "Men Jewellery", "Men Sunglasses", "Men Wallet", "Men Watch",
-                ],
+                items: ["Men Bags", "Men Belts", "Men Caps & Hats", "Men Jewellery", "Men Sunglasses", "Men Wallet", "Men Watch"],
             },
             { name: "Men Bottomwear", items: [] },
             { name: "Men Footwear", items: [] },
@@ -66,58 +56,67 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
 
     return (
         <>
-            {/* Overlay */}
+            {/* Overlay - Increased z-index to 90 */}
             <div
-                className={`fixed inset-0 bg-black/40 z-[60] transition-opacity duration-300 ${isOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+                className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-[90] transition-opacity duration-300 ${isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+                    }`}
                 onClick={onClose}
             />
 
-            {/* Sidebar Drawer */}
-            <div className={`fixed top-0 left-0 h-full w-[310px] bg-white z-[70] transition-transform duration-300 transform ${isOpen ? "translate-x-0" : "-translate-x-full"} flex flex-col shadow-2xl`}>
+            {/* Sidebar Drawer - Increased z-index to 100 */}
+            <div className={`fixed top-0 left-0 h-full w-[300px] md:w-[350px] bg-white z-[100] transition-transform duration-500 ease-in-out transform ${isOpen ? "translate-x-0" : "-translate-x-full"
+                } flex flex-col shadow-[10px_0_30px_rgba(0,0,0,0.1)]`}>
 
                 {/* Header */}
-                <div className="p-4 flex justify-between items-center border-b">
-                    <h2 className="text-govaly-pink text-xl font-bold tracking-tight">Categories</h2>
-                    <X className="cursor-pointer text-gray-500 w-5 h-5" onClick={onClose} />
+                <div className="p-5 flex justify-between items-center border-b bg-gray-50/50">
+                    <div className="flex items-center gap-2">
+                        <div className="bg-[#E2136E] text-white rounded p-1 font-bold text-sm italic">G</div>
+                        <h2 className="text-[#E2136E] text-lg font-bold tracking-tight uppercase">Categories</h2>
+                    </div>
+                    <button
+                        onClick={onClose}
+                        className="p-2 hover:bg-gray-200 rounded-full transition-colors"
+                    >
+                        <X className="text-gray-500 w-5 h-5" />
+                    </button>
                 </div>
 
                 {/* Scrollable Content */}
-                <div className="flex-1 overflow-y-auto custom-scrollbar">
+                <div className="flex-1 overflow-y-auto no-scrollbar">
                     {MENU_DATA.map((cat) => (
-                        <div key={cat.name} className="border-b border-gray-50">
+                        <div key={cat.name} className="border-b border-gray-100">
                             <div
-                                className="flex justify-between items-center px-4 py-3.5 cursor-pointer hover:bg-gray-50 transition-colors"
+                                className="flex justify-between items-center px-5 py-4 cursor-pointer hover:bg-pink-50/30 transition-colors"
                                 onClick={() => cat.subcategories && cat.subcategories.length > 0 && toggleMenu(cat.name)}
                             >
-                                <span className="font-bold text-[15px] text-gray-900">{cat.name}</span>
+                                <span className={`text-[15px] transition-colors ${expandedMenus.includes(cat.name) ? "text-[#E2136E] font-bold" : "text-gray-800 font-semibold"}`}>
+                                    {cat.name}
+                                </span>
                                 {cat.subcategories && cat.subcategories.length > 0 && (
-                                    <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform duration-300 ${expandedMenus.includes(cat.name) ? "rotate-180" : ""}`} />
+                                    <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-300 ${expandedMenus.includes(cat.name) ? "rotate-180 text-[#E2136E]" : ""}`} />
                                 )}
                             </div>
 
                             {expandedMenus.includes(cat.name) && cat.subcategories && (
-                                <div className="bg-white">
+                                <div className="bg-gray-50/30 animate-in fade-in slide-in-from-top-2 duration-300">
                                     {cat.subcategories.map((sub) => (
-                                        <div key={sub.name} className="border-t border-gray-50/50">
-                                            {/* Logic updated to check if items exists safely */}
+                                        <div key={sub.name} className="border-t border-gray-100">
                                             <div
-                                                className={`flex justify-between items-center px-8 py-2.5 cursor-pointer hover:bg-gray-50 transition-colors ${sub.items && sub.items.length > 0 ? 'font-bold text-gray-900' : 'text-gray-600 font-normal'}`}
+                                                className={`flex justify-between items-center px-8 py-3 cursor-pointer hover:bg-white transition-colors`}
                                                 onClick={() => sub.items && sub.items.length > 0 && toggleMenu(sub.name)}
                                             >
-                                                <span className="text-[14px]">{sub.name}</span>
-                                                {/* Optional chaining used here: sub.items?.length */}
+                                                <span className={`text-[14px] ${sub.items && sub.items.length > 0 ? 'font-bold text-gray-700' : 'text-gray-600 font-normal'}`}>
+                                                    {sub.name}
+                                                </span>
                                                 {sub.items && sub.items.length > 0 && (
-                                                    <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-300 ${expandedMenus.includes(sub.name) ? "rotate-180" : ""}`} />
+                                                    <ChevronDown className={`w-3.5 h-3.5 text-gray-400 transition-transform duration-300 ${expandedMenus.includes(sub.name) ? "rotate-180" : ""}`} />
                                                 )}
                                             </div>
 
                                             {expandedMenus.includes(sub.name) && sub.items && sub.items.length > 0 && (
-                                                <div className="bg-gray-50/50 pb-2">
-                                                    <div className="px-12 py-2 text-govaly-pink italic text-[13px] font-bold cursor-pointer hover:underline">
-                                                        See All
-                                                    </div>
+                                                <div className="bg-white border-l-4 border-[#E2136E] ml-8 mb-2">
                                                     {sub.items.map((item) => (
-                                                        <div key={item} className="px-12 py-1.5 text-gray-600 text-[13.5px] cursor-pointer hover:text-govaly-pink">
+                                                        <div key={item} className="px-6 py-2 text-gray-500 text-[13px] cursor-pointer hover:text-[#E2136E] hover:bg-gray-50 transition-all">
                                                             {item}
                                                         </div>
                                                     ))}
@@ -132,11 +131,10 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
                 </div>
 
                 {/* Fixed Footer */}
-                <div className="p-3 bg-white border-t space-y-2">
-                    <ContactButton icon={<Headset className="w-[18px] h-[18px] text-govaly-pink" />} label="Govaly Helpline" />
-                    <ContactButton icon={<Mail className="w-[18px] h-[18px] text-govaly-pink" />} label="support@govaly.com.bd" />
-                    <ContactButton icon={<Phone className="w-[18px] h-[18px] text-govaly-pink" />} label="01969901212" />
-                    <ContactButton icon={<MessageCircle className="w-[18px] h-[18px] text-govaly-pink" />} label="01907104920" />
+                <div className="p-4 bg-white border-t border-gray-100 shadow-[0_-5px_15px_rgba(0,0,0,0.03)] space-y-2">
+                    <ContactButton icon={<Headset className="w-4 h-4 text-[#E2136E]" />} label="Govaly Helpline" />
+                    <ContactButton icon={<Phone className="w-4 h-4 text-[#E2136E]" />} label="01969901212" />
+                    <ContactButton icon={<MessageCircle className="w-4 h-4 text-[#E2136E]" />} label="WhatsApp Support" />
                 </div>
             </div>
         </>
@@ -145,12 +143,12 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
 
 function ContactButton({ icon, label }: { icon: React.ReactNode, label: string }) {
     return (
-        <div className="flex items-center justify-between p-2.5 bg-white border border-pink-50 rounded-xl text-[13px] font-medium text-gray-700 cursor-pointer hover:bg-govaly-light-pink transition-all group">
+        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl text-[12px] font-semibold text-gray-600 cursor-pointer hover:bg-pink-50 hover:text-[#E2136E] transition-all group border border-transparent hover:border-pink-100">
             <div className="flex items-center gap-3">
                 {icon}
                 <span className="truncate">{label}</span>
             </div>
-            <ExternalLink className="w-3.5 h-3.5 text-gray-400 group-hover:text-govaly-pink" />
+            <ExternalLink className="w-3 h-3 text-gray-300 group-hover:text-[#E2136E]" />
         </div>
     );
 }

@@ -1,55 +1,108 @@
 "use client";
-import { useState } from "react";
-import { Menu, Heart, ShoppingCart, User, Smartphone } from "lucide-react";
+import React, { useState } from "react";
+import { Menu, Heart, ShoppingCart, User, Smartphone, Search } from "lucide-react";
 import Sidebar from "./Sidebar";
-import LoginModal from "./LoginModal";
+import { useLoginModal } from "./LoginModal"; // Using the global context
 
 export default function Navbar() {
     const [isSidebarOpen, setSidebarOpen] = useState(false);
-    const [isLoginOpen, setLoginOpen] = useState(false);
+    const { openLogin } = useLoginModal(); // Hook from previous step
 
     return (
-        <nav className="bg-govaly-pink text-white">
-            <div className="container-fluid mx-auto px-4 h-16 flex items-center justify-between">
+        <>
+            <nav className="bg-[#E2136E] text-white sticky top-0 z-[80] shadow-md">
+                <div className="container-fluid mx-auto px-4 h-14 md:h-20 flex items-center justify-between gap-4">
 
-                {/* Left Side: Hamburger & Logo */}
-                <div className="flex items-center gap-4">
-                    <Menu className="cursor-pointer w-7 h-7" onClick={() => setSidebarOpen(true)} />
-                    <div className="flex items-center gap-1 cursor-pointer">
-                        <div className="bg-white text-govaly-pink rounded-lg p-1 font-black text-xl italic">G</div>
-                        <span className="text-2xl font-bold tracking-tight">Govaly</span>
-                    </div>
-                </div>
+                    {/* --- LEFT: HAMBURGER & LOGO --- */}
+                    <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
+                        <button
+                            onClick={() => setSidebarOpen(true)}
+                            className="p-1 hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
+                        >
+                            <Menu className="w-6 h-6 md:w-8 md:h-8" />
+                        </button>
 
-                {/* Right Side: Actions */}
-                <div className="flex items-center gap-12 md:gap-12 pr-10">
-                    <div className="hidden sm:flex items-center gap-2 cursor-pointer border-r border-white/30 pr-4 mr-2">
-                        <Smartphone className="w-8 h-8" />
-                        <div className="text-[10px] leading-tight">
-                            Download the <br /> <span className="font-bold text-sm text-white">Govaly App</span>
+                        <div className="flex items-center gap-1.5 cursor-pointer">
+                            <div className="bg-white text-[#E2136E] rounded-lg w-8 h-8 md:w-10 md:h-10 flex items-center justify-center font-black text-xl md:text-2xl italic shadow-sm">
+                                G
+                            </div>
+                            <span className="text-xl md:text-2xl font-bold tracking-tighter hidden xs:block">
+                                Govaly
+                            </span>
                         </div>
                     </div>
 
-                    <div className="flex flex-col items-center cursor-pointer group" onClick={() => setLoginOpen(true)}>
-                        <User className="w-6 h-6 group-hover:scale-110 transition" />
-                        <span className="text-[10px] font-medium">Profile</span>
+                    {/* --- CENTER: SEARCH BAR (Hidden on small mobile) --- */}
+                    <div className="flex-1 max-w-2xl hidden md:block">
+                        <div className="relative group">
+                            <input
+                                type="text"
+                                placeholder="Search for products, brands and more..."
+                                className="w-full bg-white text-gray-800 py-2.5 px-5 pr-12 rounded-full text-sm outline-none focus:ring-2 focus:ring-pink-300 transition-all placeholder:text-gray-400"
+                            />
+                            <button className="absolute right-1 top-1/2 -translate-y-1/2 bg-[#E2136E] p-2 rounded-full hover:bg-[#c4115f] transition-colors">
+                                <Search className="w-4 h-4 text-white" />
+                            </button>
+                        </div>
                     </div>
 
-                    <div className="flex flex-col items-center cursor-pointer group">
-                        <Heart className="w-6 h-6 group-hover:scale-110 transition" />
-                        <span className="text-[10px] font-medium">Wishlist</span>
-                    </div>
+                    {/* --- RIGHT: ACTIONS --- */}
+                    <div className="flex items-center gap-3 md:gap-8 lg:gap-10">
 
-                    <div className="flex flex-col items-center cursor-pointer group relative">
-                        <ShoppingCart className="w-6 h-6 group-hover:scale-110 transition" />
-                        <span className="text-[10px] font-medium">Cart</span>
-                        <span className="absolute -top-1 right-0 bg-white text-govaly-pink text-[8px] font-bold px-1 rounded-full">0</span>
+                        {/* App Download (Desktop Only) */}
+                        <div className="hidden lg:flex items-center gap-2 cursor-pointer border-r border-white/20 pr-6 group">
+                            <div className="bg-white/10 p-2 rounded-full group-hover:bg-white/20 transition-colors">
+                                <Smartphone className="w-6 h-6" />
+                            </div>
+                            <div className="text-[10px] leading-tight">
+                                Download the <br />
+                                <span className="font-bold text-xs uppercase tracking-wide">Govaly App</span>
+                            </div>
+                        </div>
+
+                        {/* Profile */}
+                        <button
+                            onClick={openLogin}
+                            className="flex flex-col items-center gap-0.5 cursor-pointer group"
+                        >
+                            <User className="w-5 h-5 md:w-6 md:h-6 group-hover:scale-110 transition-transform" />
+                            <span className="text-[10px] font-semibold uppercase tracking-tighter">Profile</span>
+                        </button>
+
+                        {/* Wishlist */}
+                        <div className="flex flex-col items-center gap-0.5 cursor-pointer group">
+                            <Heart className="w-5 h-5 md:w-6 md:h-6 group-hover:scale-110 transition-transform" />
+                            <span className="text-[10px] font-semibold uppercase tracking-tighter">Wishlist</span>
+                        </div>
+
+                        {/* Cart */}
+                        <div className="flex flex-col items-center gap-0.5 cursor-pointer group relative">
+                            <div className="relative">
+                                <ShoppingCart className="w-5 h-5 md:w-6 md:h-6 group-hover:scale-110 transition-transform" />
+                                <span className="absolute -top-1.5 -right-1.5 bg-white text-[#E2136E] text-[9px] font-bold h-4 w-4 flex items-center justify-center rounded-full shadow-sm">
+                                    0
+                                </span>
+                            </div>
+                            <span className="text-[10px] font-semibold uppercase tracking-tighter">Cart</span>
+                        </div>
                     </div>
                 </div>
-            </div>
 
+                {/* --- MOBILE SEARCH (Visible only on mobile below the main bar) --- */}
+                <div className="md:hidden px-4 pb-3">
+                    <div className="relative">
+                        <input
+                            type="text"
+                            placeholder="Search products..."
+                            className="w-full bg-white text-gray-800 py-2 px-4 rounded-lg text-sm outline-none"
+                        />
+                        <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    </div>
+                </div>
+            </nav>
+
+            {/* --- SIDEBAR --- */}
             <Sidebar isOpen={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
-            <LoginModal isOpen={isLoginOpen} onClose={() => setLoginOpen(false)} />
-        </nav>
+        </>
     );
 }
