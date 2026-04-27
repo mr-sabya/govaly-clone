@@ -29,7 +29,7 @@ export default function Footer() {
     };
 
     return (
-        <footer className="bg-white border-t mt-10 text-[#191919]">
+        <footer className="bg-white mt-10 text-[#191919]">
             <div className="container mx-auto px-4 py-8">
                 <div className="flex flex-col md:flex-row justify-between flex-wrap gap-8">
 
@@ -119,25 +119,33 @@ export default function Footer() {
                 </div>
 
                 {/* --- SSL COMMERZ LOGOS --- */}
-                <div className="mt-10 border-t pt-6">
+                <div className="mt-10">
                     <img
-                        src="/assets/logo/SSLCommerze_desktop.png"
+                        src="/images/SSLCommerze_desktop.png"
                         alt="Payment Methods"
                         className="hidden md:block w-full object-contain h-auto"
                     />
                     <img
-                        src="/assets/banner/ssl_commerz_mobile.jpg"
+                        src="/images/ssl_commerz_mobile.jpg"
                         alt="Payment Methods Mobile"
                         className="md:hidden w-full h-auto"
                     />
                 </div>
             </div>
 
-            {/* --- COPYRIGHT --- */}
-            <div className="border-t border-gray-100 pb-24 md:pb-4">
-                <p className="text-center text-[12px] md:text-[14px] py-4 text-gray-500">
-                    © {new Date().getFullYear()} Govaly Limited
-                </p>
+            <div className="container mx-auto">
+                {/* --- COPYRIGHT --- */}
+                <div className="border-t border-gray-200 pb-24 md:pb-4 flex justify-between items-center gap-4">
+                    <p className="text-center text-[12px] md:text-[14px] py-4 text-gray-500">
+                        © {new Date().getFullYear()} Govaly Limited
+                    </p>
+                    {/* developer info */}
+                    <p className="text-center text-[10px] md:text-[12px] text-gray-400">
+                        Developed by <Link href="https://www.sabyaroy.com" target="_blank" className="text-govaly-pink hover:underline">
+                            <span className="font-semibold">Sabya Roy</span>
+                        </Link>
+                    </p>
+                </div>
             </div>
         </footer>
     );

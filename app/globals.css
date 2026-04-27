@@ -13,10 +13,16 @@
 
 /* Optional: Keep your root variables for standard CSS use */
 :root {
-    --background: #ffffff;
+    --background: #fff2f8;
     --foreground: #111827;
 }
 
+
+html {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+}
 
 /* globals.css */
 .custom-scrollbar::-webkit-scrollbar {
