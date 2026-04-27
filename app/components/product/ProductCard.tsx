@@ -3,16 +3,16 @@ import React from "react";
 import Link from "next/link";
 import { Heart } from "lucide-react";
 
-// Define the interface for the product object
 export interface Product {
     id: number | string;
-    category: string;
+    category?: string;
     title: string;
     price: number;
-    oldPrice: number;
-    discount: string;
+    oldPrice?: number;
+    discount?: string;
     image: string;
     slug: string;
+    isStockOut?: boolean; // Added for the "Stock Out" badge
 }
 
 interface ProductCardProps {
@@ -20,66 +20,74 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
-    // Function to handle wishlist click without triggering the Link
     const handleWishlist = (e: React.MouseEvent) => {
-        e.preventDefault(); // Prevents navigation
-        e.stopPropagation(); // Prevents bubbling to parent
+        e.preventDefault();
+        e.stopPropagation();
         console.log("Added to wishlist:", product.id);
     };
 
     return (
         <Link
             href={`/product/${product.slug}`}
-            className="group relative bg-white md:rounded-lg shadow-md shadow-primary/10 hover:shadow-lg transition-transform duration-300 overflow-hidden flex flex-col w-full block cursor-pointer"
+            className="group relative bg-white border border-gray-100 rounded-lg md:rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col w-full cursor-pointer"
         >
             {/* --- IMAGE SECTION --- */}
-            <div className="relative overflow-hidden w-full aspect-square">
+            <div className="relative overflow-hidden w-full aspect-[4/5] bg-gray-50">
                 <img
                     alt={product.title}
                     loading="lazy"
                     src={product.image}
-                    className="object-cover object-center group-hover:scale-105 transition-transform duration-300 w-full h-full"
+                    className="object-cover object-center group-hover:scale-105 transition-transform duration-500 w-full h-full"
                 />
 
+                {/* --- STOCK OUT BADGE --- */}
+                {product.isStockOut && (
+                    <div className="absolute top-2 right-2 z-10 bg-black/60 backdrop-blur-md text-white text-[10px] font-bold px-2 py-0.5 rounded">
+                        Stock Out
+                    </div>
+                )}
+
                 {/* --- WISHLIST BUTTON --- */}
-                <div className="absolute bottom-2.5 right-1 z-10 w-fit">
+                <div className="absolute bottom-2 right-2 z-10">
                     <button
                         type="button"
                         onClick={handleWishlist}
-                        className="cursor-pointer p-1.5 rounded-full transition-all duration-200 hover:backdrop-blur-xl hover:bg-white/40"
+                        className="cursor-pointer p-1.5 rounded-full transition-all duration-200 bg-white/40 backdrop-blur-md hover:bg-govaly-pink hover:text-white text-govaly-pink shadow-sm"
                     >
-                        <Heart className="w-6 h-6 md:w-7 md:h-7 text-[#E2136E] transition-colors duration-200" />
+                        <Heart className="w-5 h-5 md:w-6 md:h-6" strokeWidth={1.5} />
                     </button>
                 </div>
 
-                {/* --- IMAGE DOTS (Pagination Mock) --- */}
-                <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2 flex items-center gap-1 px-1 py-0.5 rounded-full z-10 backdrop-blur-xl bg-white/30">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#E2136E]" />
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#C3C3C3]/70" />
+                {/* --- IMAGE DOTS (Pagination) --- */}
+                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-2 py-1 rounded-full z-10 backdrop-blur-md bg-white/30 border border-white/20">
+                    <span className="w-1.5 h-1.5 rounded-full bg-govaly-pink shadow-sm" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-white/60" />
                 </div>
             </div>
 
             {/* --- CONTENT SECTION --- */}
-            <div className="px-2 mt-2 mb-2 flex flex-col justify-between w-full min-w-0">
-                <div className="flex-shrink-0 mb-0.5 w-full min-w-0">
-                    <h3
-                        className="text-left font-medium truncate text-[12px] md:text-[17px] w-full text-gray-800"
-                        title={product.title}
-                    >
-                        {product.title}
-                    </h3>
-                </div>
+            <div className="p-2 md:p-3 flex flex-col gap-1 w-full min-w-0">
+                <h3
+                    className="text-left font-medium truncate text-[13px] md:text-[15px] w-full text-gray-800 leading-tight"
+                    title={product.title}
+                >
+                    {product.title}
+                </h3>
 
-                <div className="flex items-center flex-wrap space-x-1 text-left">
-                    <p className="text-[#E2136E] font-semibold text-[12px] md:text-[17px]">
+                <div className="flex items-center flex-wrap gap-1.5 text-left">
+                    <p className="text-govaly-pink font-bold text-[14px] md:text-[17px]">
                         ৳{product.price}
                     </p>
-                    <p className="line-through font-normal text-[12px] md:text-[14px] text-gray-500">
-                        ৳{product.oldPrice}
-                    </p>
-                    <span className="text-[#00B852] flex-shrink-0 text-[12px] md:text-[14px] font-medium">
-                        ({product.discount})
-                    </span>
+                    {product.oldPrice && (
+                        <p className="line-through font-normal text-[11px] md:text-[13px] text-gray-400">
+                            ৳{product.oldPrice}
+                        </p>
+                    )}
+                    {product.discount && (
+                        <span className="text-govaly-orange flex-shrink-0 text-[10px] md:text-[12px] font-bold uppercase">
+                            ({product.discount})
+                        </span>
+                    )}
                 </div>
             </div>
         </Link>

@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Menu, Heart, ShoppingCart, User, Smartphone, Search } from "lucide-react";
 import Sidebar from "./Sidebar";
 import { useLoginModal } from "./LoginModal"; // Using the global context
+import Link from "next/link";
 
 export default function Navbar() {
     const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -22,14 +23,16 @@ export default function Navbar() {
                             <Menu className="w-6 h-6 md:w-8 md:h-8" />
                         </button>
 
-                        <div className="flex items-center gap-1.5 cursor-pointer">
-                            <div className="bg-white text-[#E2136E] rounded-lg w-8 h-8 md:w-10 md:h-10 flex items-center justify-center font-black text-xl md:text-2xl italic shadow-sm">
-                                G
+                        <Link href="/" className="flex items-center gap-1.5 cursor-pointer">
+                            <div className="flex items-center gap-1.5 cursor-pointer">
+                                <div className="bg-white text-[#E2136E] rounded-lg w-8 h-8 md:w-10 md:h-10 flex items-center justify-center font-black text-xl md:text-2xl italic shadow-sm">
+                                    G
+                                </div>
+                                <span className="text-xl md:text-2xl font-bold tracking-tighter hidden xs:block">
+                                    Govaly
+                                </span>
                             </div>
-                            <span className="text-xl md:text-2xl font-bold tracking-tighter hidden xs:block">
-                                Govaly
-                            </span>
-                        </div>
+                        </Link>
                     </div>
 
                     {/* --- CENTER: SEARCH BAR (Hidden on small mobile) --- */}
@@ -47,7 +50,7 @@ export default function Navbar() {
                     </div>
 
                     {/* --- RIGHT: ACTIONS --- */}
-                    <div className="flex items-center gap-3 md:gap-8 lg:gap-10">
+                    <div className="flex items-center gap-3 md:gap-8 lg:gap-10 mr-4">
 
                         {/* App Download (Desktop Only) */}
                         <div className="hidden lg:flex items-center gap-2 cursor-pointer border-r border-white/20 pr-6 group">
@@ -61,30 +64,37 @@ export default function Navbar() {
                         </div>
 
                         {/* Profile */}
-                        <button
-                            onClick={openLogin}
+                        <Link
+                            href="/profile"
                             className="flex flex-col items-center gap-0.5 cursor-pointer group"
                         >
                             <User className="w-5 h-5 md:w-6 md:h-6 group-hover:scale-110 transition-transform" />
                             <span className="text-[10px] font-semibold uppercase tracking-tighter">Profile</span>
-                        </button>
+                        </Link>
 
-                        {/* Wishlist */}
-                        <div className="flex flex-col items-center gap-0.5 cursor-pointer group">
+                        {/* Wishlist Link */}
+                        <Link
+                            href="/profile/wishlist"
+                            className="flex flex-col items-center gap-0.5 cursor-pointer group"
+                        >
                             <Heart className="w-5 h-5 md:w-6 md:h-6 group-hover:scale-110 transition-transform" />
                             <span className="text-[10px] font-semibold uppercase tracking-tighter">Wishlist</span>
-                        </div>
+                        </Link>
 
-                        {/* Cart */}
-                        <div className="flex flex-col items-center gap-0.5 cursor-pointer group relative">
+                        {/* Cart Link */}
+                        <Link
+                            href="/cart"
+                            className="flex flex-col items-center gap-0.5 cursor-pointer group relative"
+                        >
                             <div className="relative">
                                 <ShoppingCart className="w-5 h-5 md:w-6 md:h-6 group-hover:scale-110 transition-transform" />
-                                <span className="absolute -top-1.5 -right-1.5 bg-white text-[#E2136E] text-[9px] font-bold h-4 w-4 flex items-center justify-center rounded-full shadow-sm">
+                                {/* Updated Badge: Added govaly-pink background and white text for better contrast */}
+                                <span className="absolute -top-1.5 -right-1.5 bg-govaly-pink text-white text-[9px] font-bold h-4 w-4 flex items-center justify-center rounded-full shadow-sm border border-white">
                                     0
                                 </span>
                             </div>
                             <span className="text-[10px] font-semibold uppercase tracking-tighter">Cart</span>
-                        </div>
+                        </Link>
                     </div>
                 </div>
 
