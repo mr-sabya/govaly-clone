@@ -1,70 +1,107 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Search } from "lucide-react";
 import { useLoginModal } from "../layout/LoginModal";
+
+// 1. Define the interface to match your Laravel HeroBannerResource
+interface HeroBannerData {
+    id: number;
+    title: {
+        upper: string;
+        main: string;
+    };
+    search_placeholder: string;
+    tags: string[];
+    image: string | null;
+}
 
 export default function HeroBanner() {
     const { openLogin } = useLoginModal();
 
-    return (
-        <section className="relative w-full h-[350px] md:h-[480px] bg-govaly-pink-dark flex flex-col items-center justify-center text-white overflow-hidden">
+    // 2. Assign the type to useState
+    const [banner, setBanner] = useState<HeroBannerData | null>(null);
+    const [loading, setLoading] = useState(true);
 
-            {/* --- HERO BG OVERLAY (Integrated from your CSS) --- */}
+    useEffect(() => {
+        const fetchHeroData = async () => {
+            try {
+                // Use the variables from .env
+                const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+                const tenantId = process.env.NEXT_PUBLIC_TENANT_ID;
+
+                const response = await fetch(`${apiUrl}/hero-banners`, {
+                    headers: {
+                        'Accept': 'application/json',
+                        // Pass the tenant ID from .env here
+                        'X-Tenant-ID': tenantId || ''
+                    }
+                });
+                const result = await response.json();
+                console.log(result);
+
+                if (result.data && result.data.length > 0) {
+                    setBanner(result.data[0]);
+                }
+            } catch (error) {
+                console.error("Error loading hero banner:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchHeroData();
+    }, []);
+
+    if (loading) {
+        return <div className="w-full h-[350px] md:h-[480px] bg-gray-200 animate-pulse" />;
+    }
+
+    // 3. Fallback logic (The optional chaining ?. will now work without errors)
+    const content = {
+        upper: banner?.title?.upper || "Bangladesh’s Favorite Online",
+        main: banner?.title?.main || "Fashion Mall",
+        placeholder: banner?.search_placeholder || "Search for clothes...",
+        tags: banner?.tags || [],
+        bgImage: banner?.image || "/images/hero-fallback.jpg"
+    };
+
+    return (
+        <section className="relative w-full h-[350px] md:h-[480px] bg-[#E2136E] flex flex-col items-center justify-center text-white overflow-hidden">
             <div
-                className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat mix-blend-multiply opacity-30 pointer-events-none z-0"
-                style={{
-                    backgroundImage: `url("/images/2202_w039_n003_110b_p1_110.jpg")`,
-                }}
+                className="absolute inset-0 w-full h-full bg-cover bg-center opacity-30 mix-blend-multiply"
+                style={{ backgroundImage: `url("${content.bgImage}")` }}
             />
 
-            {/* --- TOP RIGHT AUTH LINKS --- */}
-            <div className="absolute top-6 right-6 md:right-12 flex items-center gap-2 text-[13px] md:text-[15px] font-semibold z-20">
-                <button
-                    onClick={openLogin}
-                    className="hover:text-pink-200 transition-colors cursor-pointer"
-                >
-                    Log In
-                </button>
-                <span className="opacity-50 font-light">|</span>
-                <button
-                    onClick={openLogin}
-                    className="bg-white text-[#E2136E] px-4 py-1.5 rounded-full hover:bg-pink-50 transition-all shadow-md font-bold"
-                >
-                    Sign Up
-                </button>
-            </div>
-
             {/* --- MAIN TEXT CONTENT --- */}
-            <div className="text-center z-10 px-4 -mt-10 md:-mt-16 select-none">
-                <h2 className="text-lg md:text-3xl font-medium tracking-wide mb-2 opacity-90">
-                    Bangladesh’s Favorite Online
+            <div className="text-center z-10 px-4">
+                <h2 className="text-lg md:text-3xl font-medium mb-2">
+                    {content.upper}
                 </h2>
 
-                <h1 className="text-4xl md:text-[80px] font-black uppercase leading-[0.85] tracking-tighter drop-shadow-2xl">
-                    Fashion <br className="md:hidden" /> Mall
+                <h1 className="text-4xl md:text-[80px] font-black uppercase">
+                    {content.main}
                 </h1>
             </div>
 
             {/* --- SEARCH BAR --- */}
-            <div className="absolute bottom-12 w-full max-w-[92%] md:max-w-[700px] z-10">
-                <div className="relative flex items-center bg-white rounded-full p-1.5 shadow-2xl transform transition-transform hover:scale-[1.01]">
+            <div className="absolute bottom-12 w-full max-w-[700px] z-10 px-4">
+                <div className="relative flex items-center bg-white rounded-full p-1.5 shadow-2xl">
                     <div className="pl-4 pr-2 text-gray-400">
                         <Search className="w-5 h-5" />
                     </div>
                     <input
                         type="text"
-                        placeholder="Search for clothes, shoes, accessories..."
-                        className="w-full bg-transparent border-none outline-none text-gray-800 py-2.5 md:py-3.5 text-sm md:text-lg placeholder:text-gray-400 font-medium"
+                        placeholder={content.placeholder}
+                        className="w-full bg-transparent border-none outline-none text-gray-800 py-3 placeholder:text-gray-400"
                     />
-                    <button className="bg-[#E2136E] text-white px-8 md:px-12 py-2.5 md:py-3.5 rounded-full text-sm md:text-base font-bold hover:bg-[#c4115f] transition-all active:scale-95 shadow-lg shadow-pink-100">
+                    <button className="bg-[#E2136E] text-white px-8 py-3 rounded-full font-bold">
                         Search
                     </button>
                 </div>
 
-                {/* Quick Tags */}
-                <div className="flex justify-center gap-4 mt-4 overflow-x-auto no-scrollbar whitespace-nowrap">
-                    {["T-Shirts", "Sarees", "Watches", "Sneakers"].map((tag) => (
-                        <span key={tag} className="text-[11px] md:text-xs bg-white/10 hover:bg-white/20 px-3 py-1 rounded-full cursor-pointer transition-colors backdrop-blur-sm border border-white/10">
+                <div className="flex justify-center gap-4 mt-4">
+                    {content.tags.map((tag, index) => (
+                        <span key={index} className="text-xs bg-white/10 px-3 py-1 rounded-full border border-white/10">
                             #{tag}
                         </span>
                     ))}
